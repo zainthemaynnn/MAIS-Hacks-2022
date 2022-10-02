@@ -16,10 +16,7 @@ for gpu in gpus:
 
 train_datagen = ImageDataGenerator(rescale=1./255,
                                    horizontal_flip=True,
-                                   vertical_flip=True,
-                                   rotation_range=45,
-                                   width_shift_range=0.4,
-                                    height_shift_range=0.4,
+                                   vertical_flip=True
                                    )
 test_datagen = ImageDataGenerator(rescale=1./255,
                                   )
@@ -48,7 +45,7 @@ base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(256
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
 x = Dense(512, activation='relu')(x)
-predictions = Dense(8, activation='softmax')(x)
+predictions = Dense(9, activation='softmax')(x)
 
 # this is the model we will train
 model = Model(inputs=base_model.input, outputs=predictions)
@@ -74,7 +71,7 @@ hist = model.fit(training_set,
                      tf.keras.callbacks.ReduceLROnPlateau(),
                      tf.keras.callbacks.EarlyStopping(patience=3)
                  ])
-model.save(os.path.join('models','fishySucks5.h5'))
+model.save(os.path.join('models','fishySucks.tflite'))
 fig = plt.figure()
 plt.plot(hist.history['loss'], color='teal', label='loss')
 plt.plot(hist.history['val_loss'], color='orange', label='val_loss')
